@@ -67,7 +67,7 @@ def get_id_by_name(list_dict, key_name):
             return d['id']
 
 
-def clean_channel(channel_id, time_range, user_id=None, bot=False):
+def clean_channel(channel_id, time_range, user_id=None, bot=False,botname=None):
     # Setup time range for query
     oldest = time_range.start_ts
     latest = time_range.end_ts
@@ -111,7 +111,7 @@ def clean_channel(channel_id, time_range, user_id=None, bot=False):
                         delete_message_on_channel(channel_id, m)
 
                 # Delete bot messages
-                if bot and m.get('subtype') == 'bot_message':
+                if bot and m.get('subtype') == 'bot_message' and (botname == None or m.get('username') == botname) :
                     delete_message_on_channel(channel_id, m)
 
             # Exceptions
@@ -308,7 +308,7 @@ def message_cleaner():
             sys.exit('User not found')
 
     # Delete messages on certain channel
-    clean_channel(_channel_id, time_range, _user_id, args.bot)
+    clean_channel(_channel_id, time_range, _user_id, args.bot, args.botname)
 
 
 def file_cleaner():
